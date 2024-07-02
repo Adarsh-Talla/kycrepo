@@ -1,9 +1,23 @@
 package com.socgen.application.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+public enum KycType {
+    PASSPORT,
+    DRIVER_LICENSE,
+    ID_CARD
+}
+
+
+package com.socgen.application.model;
+
+public enum KycStatus {
+    PENDING,
+    APPROVED,
+    REJECTED
+}
+
+package com.socgen.application.model;
+
+import javax.persistence.*;
 
 @Entity
 public class Kyc {
@@ -12,22 +26,20 @@ public class Kyc {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerName;
-    private String address;
-    private String documentType;
-    private String documentNumber;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private KycType kycType;
 
-    // Constructors, getters, and setters
+    @Enumerated(EnumType.STRING)
+    private KycStatus kycStatus;
+
+    private String documentDetails;
 
     public Kyc() {}
 
-    public Kyc(String customerName, String address, String documentType, String documentNumber, String status) {
-        this.customerName = customerName;
-        this.address = address;
-        this.documentType = documentType;
-        this.documentNumber = documentNumber;
-        this.status = status;
+    public Kyc(KycType kycType, KycStatus kycStatus, String documentDetails) {
+        this.kycType = kycType;
+        this.kycStatus = kycStatus;
+        this.documentDetails = documentDetails;
     }
 
     public Long getId() {
@@ -38,49 +50,88 @@ public class Kyc {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public KycType getKycType() {
+        return kycType;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setKycType(KycType kycType) {
+        this.kycType = kycType;
     }
 
-    public String getAddress() {
-        return address;
+    public KycStatus getKycStatus() {
+        return kycStatus;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setKycStatus(KycStatus kycStatus) {
+        this.kycStatus = kycStatus;
     }
 
-    public String getDocumentType() {
-        return documentType;
+    public String getDocumentDetails() {
+        return documentDetails;
     }
 
-    public void setDocumentType(String documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getDocumentNumber() {
-        return documentNumber;
-    }
-
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDocumentDetails(String documentDetails) {
+        this.documentDetails = documentDetails;
     }
 }
 
 
-//repository
+
+package com.socgen.application.dto;
+
+import com.socgen.application.model.KycStatus;
+import com.socgen.application.model.KycType;
+
+public class KycDTO {
+
+    private Long id;
+    private KycType kycType;
+    private KycStatus kycStatus;
+    private String documentDetails;
+
+    public KycDTO() {}
+
+    public KycDTO(Long id, KycType kycType, KycStatus kycStatus, String documentDetails) {
+        this.id = id;
+        this.kycType = kycType;
+        this.kycStatus = kycStatus;
+        this.documentDetails = documentDetails;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public KycType getKycType() {
+        return kycType;
+    }
+
+    public void setKycType(KycType kycType) {
+        this.kycType = kycType;
+    }
+
+    public KycStatus getKycStatus() {
+        return kycStatus;
+    }
+
+    public void setKycStatus(KycStatus kycStatus) {
+        this.kycStatus = kycStatus;
+    }
+
+    public String getDocumentDetails() {
+        return documentDetails;
+    }
+
+    public void setDocumentDetails(String documentDetails) {
+        this.documentDetails = documentDetails;
+    }
+}
+
+
 
 package com.socgen.application.repository;
 
@@ -90,63 +141,23 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KycRepository extends JpaRepository<Kyc, Long> {
-    // Custom query methods can be defined here if needed
 }
 
 
-//dto
-src
-└── main
-    └── java
-        └── com
-            └── socgen
-                └── application
-                    └── dto
-                        └── KycDTO.java
-package com.socgen.application.dto;
-
-public class KycDTO {
-
-    private Long id;
-    private String customerName;
-    private String address;
-    private String documentType;
-    private String documentNumber;
-    private String status;
-
-    // Constructors, getters, and setters
-
-    public KycDTO() {}
-
-    public KycDTO(Long id, String customerName, String address, String documentType, String documentNumber, String status) {
-        this.id = id;
-        this.customerName = customerName;
-        this.address = address;
-        this.documentType = documentType;
-        this.documentNumber = documentNumber;
-        this.status = status;
-    }
-
-    // Getters and setters omitted for brevity
-}
-//service
 package com.socgen.application.service;
 
 import com.socgen.application.dto.KycDTO;
-
 import java.util.List;
-import java.util.Optional;
 
 public interface KycService {
-    List<KycDTO> getAllKycs();
-    Optional<KycDTO> getKycById(Long id);
-    KycDTO createKyc(KycDTO kycDTO);
-    KycDTO updateKyc(Long id, KycDTO kycDTO);
+    KycDTO saveKyc(KycDTO kycDTO);
+    KycDTO updateKyc(KycDTO kycDTO);
     void deleteKyc(Long id);
+    List<KycDTO> getAllKycs();
+    KycDTO getKycById(Long id);
 }
 
 
-//serviceImpl
 package com.socgen.application.service.impl;
 
 import com.socgen.application.dto.KycDTO;
@@ -155,50 +166,35 @@ import com.socgen.application.repository.KycRepository;
 import com.socgen.application.service.KycService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class KycServiceImpl implements KycService {
 
+    private final KycRepository kycRepository;
+
     @Autowired
-    private KycRepository kycRepository;
-
-    @Override
-    public List<KycDTO> getAllKycs() {
-        return kycRepository.findAll().stream()
-                .map(this::convertEntityToDto)
-                .collect(Collectors.toList());
+    public KycServiceImpl(KycRepository kycRepository) {
+        this.kycRepository = kycRepository;
     }
 
     @Override
-    public Optional<KycDTO> getKycById(Long id) {
-        return kycRepository.findById(id).map(this::convertEntityToDto);
+    public KycDTO saveKyc(KycDTO kycDTO) {
+        Kyc kyc = new Kyc(kycDTO.getKycType(), kycDTO.getKycStatus(), kycDTO.getDocumentDetails());
+        return mapToDTO(kycRepository.save(kyc));
     }
 
     @Override
-    public KycDTO createKyc(KycDTO kycDTO) {
-        Kyc kyc = convertDtoToEntity(kycDTO);
-        Kyc savedKyc = kycRepository.save(kyc);
-        return convertEntityToDto(savedKyc);
-    }
-
-    @Override
-    public KycDTO updateKyc(Long id, KycDTO kycDTO) {
-        Optional<Kyc> optionalKyc = kycRepository.findById(id);
-        if (optionalKyc.isPresent()) {
-            Kyc kyc = optionalKyc.get();
-            kyc.setCustomerName(kycDTO.getCustomerName());
-            kyc.setAddress(kycDTO.getAddress());
-            kyc.setDocumentType(kycDTO.getDocumentType());
-            kyc.setDocumentNumber(kycDTO.getDocumentNumber());
-            kyc.setStatus(kycDTO.getStatus());
-            Kyc updatedKyc = kycRepository.save(kyc);
-            return convertEntityToDto(updatedKyc);
-        }
-        return null;
+    public KycDTO updateKyc(KycDTO kycDTO) {
+        Kyc kyc = kycRepository.findById(kycDTO.getId()).orElseThrow(() -> new RuntimeException("KYC not found"));
+        kyc.setKycType(kycDTO.getKycType());
+        kyc.setKycStatus(kycDTO.getKycStatus());
+        kyc.setDocumentDetails(kycDTO.getDocumentDetails());
+        return mapToDTO(kycRepository.save(kyc));
     }
 
     @Override
@@ -206,18 +202,22 @@ public class KycServiceImpl implements KycService {
         kycRepository.deleteById(id);
     }
 
-    private KycDTO convertEntityToDto(Kyc kyc) {
-        return new KycDTO(kyc.getId(), kyc.getCustomerName(), kyc.getAddress(),
-                kyc.getDocumentType(), kyc.getDocumentNumber(), kyc.getStatus());
+    @Override
+    public List<KycDTO> getAllKycs() {
+        return kycRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-    private Kyc convertDtoToEntity(KycDTO kycDTO) {
-        return new Kyc(kycDTO.getCustomerName(), kycDTO.getAddress(),
-                kycDTO.getDocumentType(), kycDTO.getDocumentNumber(), kycDTO.getStatus());
+    @Override
+    public KycDTO getKycById(Long id) {
+        return kycRepository.findById(id).map(this::mapToDTO).orElseThrow(() -> new RuntimeException("KYC not found"));
+    }
+
+    private KycDTO mapToDTO(Kyc kyc) {
+        return new KycDTO(kyc.getId(), kyc.getKycType(), kyc.getKycStatus(), kyc.getDocumentDetails());
     }
 }
 
-//controller
+
 package com.socgen.application.controller;
 
 import com.socgen.application.dto.KycDTO;
@@ -227,43 +227,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
         import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/kyc")
 public class KycController {
 
-    @Autowired
-    private KycService kycService;
+    private final KycService kycService;
 
-    @GetMapping("/all")
-    public List<KycDTO> getAllKycs() {
-        return kycService.getAllKycs();
+    @Autowired
+    public KycController(KycService kycService) {
+        this.kycService = kycService;
+    }
+
+    @PostMapping
+    public ResponseEntity<KycDTO> createKyc(@RequestBody KycDTO kycDTO) {
+        return ResponseEntity.ok(kycService.saveKyc(kycDTO));
+    }
+
+    @PutMapping
+    public ResponseEntity<KycDTO> updateKyc(@RequestBody KycDTO kycDTO) {
+        return ResponseEntity.ok(kycService.updateKyc(kycDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteKyc(@PathVariable Long id) {
+        kycService.deleteKyc(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<KycDTO>> getAllKycs() {
+        return ResponseEntity.ok(kycService.getAllKycs());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<KycDTO> getKycById(@PathVariable Long id) {
-        Optional<KycDTO> kyc = kycService.getKycById(id);
-        return kyc.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/create")
-    public KycDTO createKyc(@RequestBody KycDTO kycDTO) {
-        return kycService.createKyc(kycDTO);
-    }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<KycDTO> updateKyc(@PathVariable Long id, @RequestBody KycDTO kycDTO) {
-        KycDTO updatedKyc = kycService.updateKyc(id, kycDTO);
-        return updatedKyc != null ? ResponseEntity.ok(updatedKyc) : ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteKyc(@PathVariable Long id) {
-        kycService.deleteKyc(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(kycService.getKycById(id));
     }
 }
-
-
-
