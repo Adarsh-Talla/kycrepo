@@ -1,94 +1,114 @@
-package com.socgen.application.model;
+package com.socgen.application.controller;
 
-public enum Role {
-    ADMIN,
-    USER
+import com.socgen.application.dto.KycDTO;
+import com.socgen.application.service.KycService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/kyc")
+public class KycController {
+
+    private final KycService kycService;
+
+    @Autowired
+    public KycController(KycService kycService) {
+        this.kycService = kycService;
+    }
+
+    // Create KYC (User)
+    @PostMapping
+    public ResponseEntity<KycDTO> createKyc(@RequestBody KycDTO kycDTO, Authentication authentication) {
+        // Assuming the authenticated user is submitting their own KYC
+        kycDTO.setUserId(authentication.getName()); // Set the userId from the authenticated user's name (or ID)
+        return ResponseEntity.ok(kycService.saveKyc(kycDTO));
+    }
+
+    // Update KYC (Admin/User)
+    @PutMapping
+    public ResponseEntity<KycDTO> updateKyc(@RequestBody KycDTO kycDTO, Authentication authentication) {
+        // Check if the user is admin or the owner of the KYC record
+        if (isAdmin(authentication) || isOwner(authentication, kycDTO.getId())) {
+            return ResponseEntity.ok(kycService.updateKyc(kycDTO));
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    // Delete KYC (Admin)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteKyc(@PathVariable Long id, Authentication authentication) {
+        // Check if the user is admin
+        if (isAdmin(authentication)) {
+            kycService.deleteKyc(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    // Get KYC by ID (Admin/User)
+    @GetMapping("/{id}")
+    public ResponseEntity<KycDTO> getKycById(@PathVariable Long id, Authentication authentication) {
+        // Check if the user is admin or the owner of the KYC record
+        if (isAdmin(authentication) || isOwner(authentication, id)) {
+            return ResponseEntity.ok(kycService.getKycById(id));
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    // Get all KYCs (Admin)
+    @GetMapping
+    public ResponseEntity<List<KycDTO>> getAllKycs(Authentication authentication) {
+        // Check if the user is admin
+        if (isAdmin(authentication)) {
+            return ResponseEntity.ok(kycService.getAllKycs());
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    // Helper method to check if the authenticated user is an admin
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    // Helper method to check if the authenticated user is the owner of the KYC record
+    private boolean isOwner(Authentication authentication, Long kycId) {
+        KycDTO kycDTO = kycService.getKycById(kycId);
+        return kycDTO.getUserId().equals(authentication.getName()); // Compare with authenticated user's name (or ID)
+    }
 }
+///randommm stuff
 
-
-package com.socgen.application.model;
-
-import javax.persistence.*;
-        import java.util.HashSet;
-import java.util.Set;
-
-@Entity
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String username;
-
-    private String password;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
-
-    public User() {}
-
-    public User(String username, String password, Set<Role> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-}
-
-
+//code starts here
 package com.socgen.application.dto;
 
-import com.socgen.application.model.Role;
+import com.socgen.application.model.KycStatus;
+import com.socgen.application.model.KycType;
 
-import java.util.Set;
-
-public class UserDTO {
+public class KycDTO {
 
     private Long id;
-    private String username;
-    private String password;
-    private Set<Role> roles;
+    private String userId;
+    private KycType kycType;
+    private KycStatus kycStatus;
+    private String documentDetails;
 
-    public UserDTO() {}
+    public KycDTO() {}
 
-    public UserDTO(Long id, String username, String password, Set<Role> roles) {
+    public KycDTO(Long id, String userId, KycType kycType, KycStatus kycStatus, String documentDetails) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
+        this.userId = userId;
+        this.kycType = kycType;
+        this.kycStatus = kycStatus;
+        this.documentDetails = documentDetails;
     }
 
     public Long getId() {
@@ -99,154 +119,233 @@ public class UserDTO {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getPassword() {
-        return password;
+    public KycType getKycType() {
+        return kycType;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKycType(KycType kycType) {
+        this.kycType = kycType;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public KycStatus getKycStatus() {
+        return kycStatus;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setKycStatus(KycStatus kycStatus) {
+        this.kycStatus = kycStatus;
     }
-}
 
+    public String getDocumentDetails() {
+        return documentDetails;
+    }
 
-package com.socgen.application.repository;
-
-import com.socgen.application.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
-
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+    public void setDocumentDetails(String documentDetails) {
+        this.documentDetails = documentDetails;
+    }
 }
 
 
 package com.socgen.application.service;
 
-import com.socgen.application.dto.UserDTO;
+import com.socgen.application.dto.KycDTO;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface UserService {
-    Optional<UserDTO> findByUsername(String username);
-    UserDTO saveUser(UserDTO userDTO);
-    void addRoleToUser(String username, String roleName);
-    boolean isPasswordMatch(String rawPassword, String encodedPassword);
+public interface KycService {
+    KycDTO saveKyc(KycDTO kycDTO);
+    KycDTO updateKyc(KycDTO kycDTO);
+    void deleteKyc(Long id);
+    KycDTO getKycById(Long id);
+    List<KycDTO> getAllKycs();
 }
+
 
 
 package com.socgen.application.service.impl;
 
-import com.socgen.application.dto.UserDTO;
-import com.socgen.application.model.Role;
-import com.socgen.application.model.User;
-import com.socgen.application.repository.UserRepository;
-import com.socgen.application.service.UserService;
+import com.socgen.application.dto.KycDTO;
+import com.socgen.application.model.Kyc;
+import com.socgen.application.repository.KycRepository;
+import com.socgen.application.service.KycService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
-public class UserServiceImpl implements UserService {
+public class KycServiceImpl implements KycService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final KycRepository kycRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public KycServiceImpl(KycRepository kycRepository) {
+        this.kycRepository = kycRepository;
     }
 
     @Override
-    public Optional<UserDTO> findByUsername(String username) {
-        return userRepository.findByUsername(username).map(this::mapToDTO);
+    public KycDTO saveKyc(KycDTO kycDTO) {
+        Kyc kyc = new Kyc(kycDTO.getUserId(), kycDTO.getKycType(), kycDTO.getKycStatus(), kycDTO.getDocumentDetails());
+        return mapToDTO(kycRepository.save(kyc));
     }
 
     @Override
-    public UserDTO saveUser(UserDTO userDTO) {
-        User user = new User(userDTO.getUsername(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRoles());
-        return mapToDTO(userRepository.save(user));
+    public KycDTO updateKyc(KycDTO kycDTO) {
+        Kyc kyc = kycRepository.findById(kycDTO.getId()).orElseThrow(() -> new RuntimeException("KYC not found"));
+        kyc.setKycType(kycDTO.getKycType());
+        kyc.setKycStatus(kycDTO.getKycStatus());
+        kyc.setDocumentDetails(kycDTO.getDocumentDetails());
+        return mapToDTO(kycRepository.save(kyc));
     }
 
     @Override
-    public void addRoleToUser(String username, String roleName) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
-        Role role = Role.valueOf(roleName);
-        user.getRoles().add(role);
+    public void deleteKyc(Long id) {
+        kycRepository.deleteById(id);
     }
 
     @Override
-    public boolean isPasswordMatch(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+    public KycDTO getKycById(Long id) {
+        Kyc kyc = kycRepository.findById(id).orElseThrow(() -> new RuntimeException("KYC not found"));
+        return mapToDTO(kyc);
     }
 
-    private UserDTO mapToDTO(User user) {
-        return new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.getRoles());
+    @Override
+    public List<KycDTO> getAllKycs() {
+        return kycRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    private KycDTO mapToDTO(Kyc kyc) {
+        return new KycDTO(kyc.getId(), kyc.getUserId(), kyc.getKycType(), kyc.getKycStatus(), kyc.getDocumentDetails());
     }
 }
 
 
 package com.socgen.application.controller;
 
-import com.socgen.application.dto.UserDTO;
-import com.socgen.application.model.Role;
-import com.socgen.application.service.UserService;
+import com.socgen.application.dto.KycDTO;
+import com.socgen.application.service.KycService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/user")
-public class UserController {
+        import java.util.List;
 
-    private final UserService userService;
+@RestController
+@RequestMapping("/api/kyc")
+public class KycController {
+
+    private final KycService kycService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public KycController(KycService kycService) {
+        this.kycService = kycService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.saveUser(userDTO));
+    // Create KYC (User)
+    @PostMapping
+    public ResponseEntity<KycDTO> createKyc(@RequestBody KycDTO kycDTO, Authentication authentication) {
+        // Assuming the authenticated user is submitting their own KYC
+        kycDTO.setUserId(authentication.getName()); // Set the userId from the authenticated user's name (or ID)
+        return ResponseEntity.ok(kycService.saveKyc(kycDTO));
     }
 
-    @PostMapping("/role-to-user")
-    public ResponseEntity<Void> addRoleToUser(@RequestParam String username, @RequestParam Role role) {
-        userService.addRoleToUser(username, role.name());
-        return ResponseEntity.ok().build();
+    // Update KYC (Admin/User)
+    @PutMapping
+    public ResponseEntity<KycDTO> updateKyc(@RequestBody KycDTO kycDTO, Authentication authentication) {
+        // Check if the user is admin or the owner of the KYC record
+        if (isAdmin(authentication) || isOwner(authentication, kycDTO.getId())) {
+            return ResponseEntity.ok(kycService.updateKyc(kycDTO));
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody UserDTO userDTO) {
-        return userService.findByUsername(userDTO.getUsername())
-                .filter(user -> userService.isPasswordMatch(userDTO.getPassword(), user.getPassword()))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(401).build());
+    // Delete KYC (Admin)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteKyc(@PathVariable Long id, Authentication authentication) {
+        // Check if the user is admin
+        if (isAdmin(authentication)) {
+            kycService.deleteKyc(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
+
+    // Get KYC by ID (Admin/User)
+    @GetMapping("/{id}")
+    public ResponseEntity<KycDTO> getKycById(@PathVariable Long id, Authentication authentication) {
+        // Check if the user is admin or the owner of the KYC record
+        if (isAdmin(authentication) || isOwner(authentication, id)) {
+            return ResponseEntity.ok(kycService.getKycById(id));
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    // Get all KYCs (Admin)
+    @GetMapping
+    public ResponseEntity<List<KycDTO>> getAllKycs(Authentication authentication) {
+        // Check if the user is admin
+        if (isAdmin(authentication)) {
+            return ResponseEntity.ok(kycService.getAllKycs());
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    // Helper method to check if the authenticated user is an admin
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    // Helper method to check if the authenticated user is the owner of the KYC record
+    private boolean isOwner(Authentication authentication, Long kycId) {
+        KycDTO kycDTO = kycService.getKycById(kycId);
+        return kycDTO.getUserId().equals(authentication.getName()); // Compare with authenticated user's name (or ID)
+    }
+}
+
+
+package com.socgen.application.model;
+
+import javax.persistence.*;
+
+@Entity
+public class Kyc {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String userId; // The ID of the user who submitted this KYC
+
+    @Enumerated(EnumType.STRING)
+    private KycType kycType;
+
+    @Enumerated(EnumType.STRING)
+    private KycStatus kycStatus;
+
+    private String documentDetails;
+
+    public Kyc() {}
+
+    public Kyc(String userId, KycType kycType, KycStatus kycStatus, String documentDetails) {
+        this.userId = userId;
+        this.kycType = kycType;
+        this.kycStatus = kycStatus;
+        this.documentDetails = documentDetails;
+    }
+
+    // getters and setters
 }
