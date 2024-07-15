@@ -1,0 +1,13 @@
+<!-- register.component.html -->
+
+<form (ngSubmit)="register()">
+    <label>Username:</label>
+    <input type="text" [(ngModel)]="username" name="username" required>
+  
+    <label>Password:</label>
+    <input type="password" [(ngModel)]="password" name="password" required>
+  
+    <button type="submit">Register</button>
+    <p *ngIf="error" class="error">{{ error }}</p>
+  </form>
+  

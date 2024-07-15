@@ -8,10 +8,14 @@ import { AdminModule } from './admin/admin.module';
 import { AppComponent } from './app.component';
 import { CustomerModule } from './customer/customer.module';
 import { KycModule } from './kyc/kyc.module';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
+    RegisterComponent,
     
   ],
   imports: [
