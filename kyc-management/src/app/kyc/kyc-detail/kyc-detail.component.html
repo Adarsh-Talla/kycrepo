@@ -1,1 +1,6 @@
-<p>kyc-detail works!</p>
+<h2>KYC Detail</h2>
+<div *ngIf="kyc">
+  <p>Type: {{ kyc.kycType }}</p>
+  <p>Status: {{ kyc.kycStatus }}</p>
+  <p>Details: {{ kyc.documentDetails }}</p>
+</div>

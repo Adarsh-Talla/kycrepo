@@ -1,1 +1,8 @@
-<p>kyc-list works!</p>
+<h2>KYC List</h2>
+<ul>
+  <li *ngFor="let kyc of kycs">
+    {{ kyc.documentDetails }} - {{ kyc.kycStatus }}
+    <a [routerLink]="['/kyc/detail', kyc.id]">View</a>
+    <a [routerLink]="['/kyc/form', kyc.id]">Edit</a>
+  </li>
+</ul>

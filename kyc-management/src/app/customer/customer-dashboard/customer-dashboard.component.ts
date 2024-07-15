@@ -1,10 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { User } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-customer-dashboard',
   templateUrl: './customer-dashboard.component.html',
-  styleUrl: './customer-dashboard.component.css'
+  styleUrls: ['./customer-dashboard.component.css']
 })
-export class CustomerDashboardComponent {
+export class CustomerDashboardComponent implements OnInit {
+  user: User | undefined;
 
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    // Load customer-specific data
+  }
 }

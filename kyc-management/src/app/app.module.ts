@@ -1,30 +1,30 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 
-import { AuthModule } from './auth/auth.module';
-import { CoreModule } from './core/core.module';
-import { KycModule } from './kyc/kyc.module';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AppComponent } from './app.component';
+import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
+import { KycDetailComponent } from './kyc/kyc-detail/kyc-detail.component';
+import { KycFormComponent } from './kyc/kyc-form/kyc-form.component';
+import { KycListComponent } from './kyc/kyc-list/kyc-list.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AdminDashboardComponent,
+    CustomerDashboardComponent,
+    KycListComponent,
+    KycDetailComponent,
+    KycFormComponent
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
     AppRoutingModule,
-    CoreModule,
-    AuthModule,
-    KycModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
