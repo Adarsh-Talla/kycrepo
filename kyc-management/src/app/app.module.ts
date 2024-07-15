@@ -4,24 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
-import { AdminModule } from './admin/admin.module';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AppComponent } from './app.component';
-import { CustomerModule } from './customer/customer.module';
-import { KycModule } from './kyc/kyc.module';
+import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
+import { KycDetailComponent } from './kyc/kyc-detail/kyc-detail.component';
+import { KycFormComponent } from './kyc/kyc-form/kyc-form.component';
+import { KycListComponent } from './kyc/kyc-list/kyc-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    
+    AdminDashboardComponent,
+    CustomerDashboardComponent,
+    KycListComponent,
+    KycDetailComponent,
+    KycFormComponent
   ],
   imports: [
-    
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    CustomerModule,
-    AdminModule,
-    KycModule,
     FormsModule
   ],
   providers: [],
