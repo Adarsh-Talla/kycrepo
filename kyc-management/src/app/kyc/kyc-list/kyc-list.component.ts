@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { KycDTO } from '../../models/kyc.model';
-import { KycService } from '../../services/kyc.service';
+import { KycService } from '../../kyc.service';
+import { Kyc } from '../../models/kyc.model';
 
 @Component({
   selector: 'app-kyc-list',
@@ -8,13 +8,25 @@ import { KycService } from '../../services/kyc.service';
   styleUrls: ['./kyc-list.component.css']
 })
 export class KycListComponent implements OnInit {
-  kycs: KycDTO[] = [];
+  kycs: Kyc[] = [];
 
-  constructor(private kycService: KycService) {}
+  constructor(private kycService: KycService) { }
 
   ngOnInit(): void {
     this.kycService.getKycs().subscribe(data => {
       this.kycs = data;
+    });
+  }
+
+  approveKyc(id: number) {
+    this.kycService.updateKycStatus(id, 'APPROVED').subscribe(() => {
+      this.ngOnInit(); // Refresh the list
+    });
+  }
+
+  rejectKyc(id: number) {
+    this.kycService.updateKycStatus(id, 'REJECTED').subscribe(() => {
+      this.ngOnInit(); // Refresh the list
     });
   }
 }

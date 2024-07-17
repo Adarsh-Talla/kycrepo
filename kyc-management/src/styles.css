@@ -1,20 +1,19 @@
-/* src/styles.css */
-
 body {
   font-family: Arial, sans-serif;
+}
+
+.login-container,
+.register-container,
+.dashboard-container {
+  width: 300px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 h2 {
-  color: #2c3e50;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin: 5px 0;
+  text-align: center;
 }
 
 form {
@@ -22,46 +21,24 @@ form {
   flex-direction: column;
 }
 
-form div {
-  margin-bottom: 10px;
-}
-
 label {
-  margin-bottom: 5px;
+  margin: 10px 0 5px;
 }
 
-input, select, button {
-  padding: 8px;
-  font-size: 14px;
-}
-body {
-  font-family: Arial, sans-serif;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: auto;
-}
-
-label {
-  margin-top: 10px;
-}
-
-input, select, button {
-  margin-top: 5px;
+input,
+select,
+button {
+  padding: 10px;
+  margin: 5px 0 10px;
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #218838;
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -8,11 +7,16 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./customer-dashboard.component.css']
 })
 export class CustomerDashboardComponent implements OnInit {
-  user: User | undefined;
-
-  constructor(private authService: AuthService) {}
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    // Load customer-specific data
+  }
+
+  viewKyc() {
+    this.router.navigate(['/kyc-list']);
+  }
+
+  createKyc() {
+    this.router.navigate(['/kyc-create']);
   }
 }

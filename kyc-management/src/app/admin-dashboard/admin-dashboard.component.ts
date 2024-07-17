@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -8,11 +7,12 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
-  users: User[] = [];
-
-  constructor(private authService: AuthService) {}
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    // Load users or other admin-specific data
+  }
+
+  manageKyc() {
+    this.router.navigate(['/kyc-list']);
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { KycDTO } from '../../models/kyc.model';
-import { KycService } from '../../services/kyc.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { KycService } from '../../kyc.service';
 
 @Component({
   selector: 'app-kyc-detail',
@@ -9,14 +8,29 @@ import { KycService } from '../../services/kyc.service';
   styleUrls: ['./kyc-detail.component.css']
 })
 export class KycDetailComponent implements OnInit {
-  kyc: KycDTO | undefined;
+  id!: number ;
+  kyc: any;
 
-  constructor(private route: ActivatedRoute, private kycService: KycService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private kycService: KycService) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params['id'];
-    this.kycService.getKyc(id).subscribe(data => {
+    this.id = this.route.snapshot.params['id'];
+    this.loadKycDetail();
+  }
+
+  loadKycDetail() {
+    this.kycService.getKycById(this.id).subscribe(data => {
       this.kyc = data;
     });
+  }
+
+  updateKyc() {
+    this.kycService.updateKyc(this.id, this.kyc).subscribe(() => {
+      this.router.navigate(['/kyc-list']);
+    });
+  }
+
+  goBack() {
+    this.router.navigate(['/kyc-list']);
   }
 }

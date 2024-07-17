@@ -1,0 +1,18 @@
+<div class="kyc-create-container">
+  <h2>Create KYC Document</h2>
+  <form (ngSubmit)="createKyc()">
+    <label for="userId">User ID</label>
+    <input type="text" id="userId" [(ngModel)]="kyc.userId" name="userId" required>
+    
+    <label for="kycType">KYC Type</label>
+    <select id="kycType" [(ngModel)]="kyc.kycType" name="kycType" required>
+      <option *ngFor="let type of (kycTypes | keyvalue)" [value]="type.value">{{ type.key }}</option>
+    </select>
+
+    <label for="documentDetails">Document Details</label>
+    <textarea id="documentDetails" [(ngModel)]="kyc.documentDetails" name="documentDetails" required></textarea>
+    
+    <button type="submit">Create</button>
+    <button type="button" (click)="goBack()">Back</button>
+  </form>
+</div>

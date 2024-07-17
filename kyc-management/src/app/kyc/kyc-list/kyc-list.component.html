@@ -1,8 +1,24 @@
-<h2>KYC List</h2>
-<ul>
-  <li *ngFor="let kyc of kycs">
-    {{ kyc.documentDetails }} - {{ kyc.kycStatus }}
-    <a [routerLink]="['/kyc/detail', kyc.id]">View</a>
-    <a [routerLink]="['/kyc/form', kyc.id]">Edit</a>
-  </li>
-</ul>
+<div class="kyc-list-container">
+  <h2>KYC Documents</h2>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>User ID</th>
+      <th>Type</th>
+      <th>Status</th>
+      <th>Details</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let kyc of kycs">
+      <td>{{ kyc.id }}</td>
+      <td>{{ kyc.userId }}</td>
+      <td>{{ kyc.kycType }}</td>
+      <td>{{ kyc.kycStatus }}</td>
+      <td>{{ kyc.documentDetails }}</td>
+      <td>
+        <button (click)="approveKyc(kyc.id)" [disabled]="kyc.kycStatus === 'APPROVED'">Approve</button>
+        <button (click)="rejectKyc(kyc.id)" [disabled]="kyc.kycStatus === 'REJECTED'">Reject</button>
+      </td>
+    </tr>
+  </table>
+</div>

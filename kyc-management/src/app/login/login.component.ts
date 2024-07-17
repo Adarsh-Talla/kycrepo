@@ -1,8 +1,7 @@
-// login.component.ts
 
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,22 +9,22 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username!: string;
-  password!: string;
-  error: string | undefined;
+  username: string = '';
+  password: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
-  login(): void {
-    this.authService.login({ username: this.username, password: this.password })
-      .subscribe(
-        () => {
-          // Navigate based on user role (admin or customer)
-          this.router.navigate(['/dashboard']); // Replace with appropriate redirect
-        },
-        error => {
-          this.error = 'Invalid username or password'; // Handle login errors
-        }
-      );
+  login() {
+    this.authService.login(this.username, this.password).subscribe(response => {
+      localStorage.setItem('currentUser', JSON.stringify(response));
+      if (response.role === 'ADMIN') {
+        this.router.navigate(['/admin-dashboard']);
+      } else if (response.role === 'CUSTOMER') {
+        this.router.navigate(['/customer-dashboard']);
+      }
+    }, error => {
+      alert('Invalid credentials');
+    });
   }
 }
+
