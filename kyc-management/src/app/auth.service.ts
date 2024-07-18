@@ -1,22 +1,34 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/api/auth'; // Update with your backend URL
+  private users = [
+    { username: 'admin', password: 'admin123', role: 'admin' },
+    { username: 'customer', password: 'customer123', role: 'customer' }
+  ];
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private router: Router) {}
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, { username, password });
+  login(username: string, password: string): boolean {
+    const user = this.users.find(user => user.username === username && user.password === password);
+    if (user) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      return true;
+    }
+    return false;
   }
 
-  register(username: string, password: string, role: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, { username, password, role });
+  register(username: string, password: string, role: string): boolean {
+    const userExists = this.users.some(user => user.username === username);
+    if (userExists) {
+      return false;
+    } else {
+      this.users.push({ username, password, role });
+      return true;
+    }
   }
 
   logout() {
@@ -24,12 +36,11 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  isLoggedIn(): boolean {
-    return localStorage.getItem('currentUser') !== null;
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser') || '{}');
   }
 
-  getRole(): string | null {
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    return user?.role || null;
+  isAuthenticated(): boolean {
+    return localStorage.getItem('currentUser') !== null;
   }
 }

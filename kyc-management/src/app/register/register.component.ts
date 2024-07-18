@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
@@ -11,16 +10,16 @@ import { AuthService } from '../auth.service';
 export class RegisterComponent {
   username: string = '';
   password: string = '';
-  role: string = 'CUSTOMER'; // default role
+  role: string = 'customer'; // Default role
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
-  register() {
-    this.authService.register(this.username, this.password, this.role).subscribe(response => {
-      alert('Registration successful');
+  onRegister() {
+    if (this.authService.register(this.username, this.password, this.role)) {
       this.router.navigate(['/login']);
-    }, error => {
-      alert('Registration failed');
-    });
+    } else {
+      this.errorMessage = 'Username already exists';
+    }
   }
 }
