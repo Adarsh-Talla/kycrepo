@@ -43,4 +43,13 @@ export class AuthService {
   isAuthenticated(): boolean {
     return localStorage.getItem('currentUser') !== null;
   }
+
+  isLoggedIn(): boolean {
+    return this.isAuthenticated();
+  }
+
+  getRole(): string {
+    const currentUser = this.getCurrentUser();
+    return currentUser.role || '';
+  }
 }
