@@ -7,19 +7,21 @@ import { AuthService } from './auth.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (this.authService.isLoggedIn()) {
-      const userRole = this.authService.getRole();
-      const expectedRole = route.data['expectedRole'];
+    const expectedRole = route.data['expectedRole'];
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (this.authService.isLoggedIn() && currentUser) {
+      const userRoles = currentUser.roles;
 
-      if (expectedRole && expectedRole !== userRole) {
-        this.router.navigate(['/login']);
-        return false;
+      if (expectedRole && userRoles.includes(expectedRole)) {
+        return true;
       }
 
-      return true;
+      this.router.navigate(['/login']);
+      return false;
     }
 
     this.router.navigate(['/login']);

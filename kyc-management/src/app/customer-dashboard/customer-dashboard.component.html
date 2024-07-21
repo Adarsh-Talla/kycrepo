@@ -1,5 +1,33 @@
-<div class="customer-dashboard-container">
+<div>
   <h2>Customer Dashboard</h2>
-  <button (click)="viewKyc()">View KYC Documents</button>
-  <button (click)="createKyc()">Create KYC Document</button>
+
+  <!-- Link to KYC Create Component -->
+  <div>
+    <a routerLink="/kyc-create" class="create-kyc-link">Apply for KYC</a>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Display KYC Information -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>KYC Type</th>
+        <th>Status</th>
+        <th>Document Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let kyc of userKycs">
+        <td>{{ kyc.id }}</td>
+        <td>{{ kyc.kycType }}</td>
+        <td>{{ kyc.kycStatus }}</td>
+        <td>{{ kyc.documentDetails }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

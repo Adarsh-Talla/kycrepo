@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { KycService } from '../kyc.service';
+import { Kyc } from '../models/kyc.model';
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -7,16 +8,23 @@ import { Router } from '@angular/router';
   styleUrls: ['./customer-dashboard.component.css']
 })
 export class CustomerDashboardComponent implements OnInit {
-  constructor(private router: Router) { }
+  userKycs: Kyc[] = [];
+  errorMessage: string = '';
+
+  constructor(private kycService: KycService) {}
 
   ngOnInit(): void {
+    this.loadUserKycs();
   }
 
-  viewKyc() {
-    this.router.navigate(['/kyc-list']);
-  }
-
-  createKyc() {
-    this.router.navigate(['/kyc-create']);
+  loadUserKycs(): void {
+    this.kycService.getKycForUser().subscribe({
+      next: (kycs: Kyc[]) => {
+        this.userKycs = kycs;
+      },
+      error: (err: any) => {
+        this.errorMessage = `Failed to load KYCs: ${err.message || 'Unknown error'}`;
+      }
+    });
   }
 }

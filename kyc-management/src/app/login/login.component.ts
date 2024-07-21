@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { Role } from '../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -15,16 +16,27 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
-    if (this.authService.login(this.username, this.password)) {
-      const currentUser = this.authService.getCurrentUser();
-      if (currentUser.role === 'admin') {
-        this.router.navigate(['/admin-dashboard']);
-      } else if (currentUser.role === 'customer') {
-        this.router.navigate(['/customer-dashboard']);
-      }
-    } else {
-      this.errorMessage = 'Invalid username or password';
-    }
+    this.authService.login(this.username, this.password).subscribe({
+      next: (success: boolean) => {
+        if (success) {
+          const currentUser = this.authService.getCurrentUser();
+          if (currentUser) {  // Check if currentUser is not null
+            if (currentUser.roles.includes(Role.ADMIN)) {
+              this.router.navigate(['/admin-dashboard']);
+            } else if (currentUser.roles.includes(Role.USER)) {
+              this.router.navigate(['/customer-dashboard']);
+            } else {
+              this.errorMessage = 'User role not recognized';
+            }
+          } else {
+            this.errorMessage = 'User information not available';
+          }
+        } else {
+          this.errorMessage = 'Invalid username or password';
+        }
+      },
+      error: (err: any) => this.errorMessage = `Login failed: ${err.message || 'Unknown error'}`
+    });
   }
 
   navigateToRegister() {

@@ -3,13 +3,13 @@ export enum KycType {
   ADDRESS_PROOF = 'ADDRESS_PROOF',
   INCOME_PROOF = 'INCOME_PROOF'
 }
-
 export enum KycStatus {
   SUBMITTED = 'SUBMITTED',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   PENDING = 'PENDING'
 }
+
 
 export interface Kyc {
   id: number;
