@@ -13,7 +13,7 @@ export enum KycStatus {
 
 export interface Kyc {
   id: number;
-  userId: string;
+  userName: string;
   kycType: KycType;
   kycStatus: KycStatus;
   documentDetails: string;

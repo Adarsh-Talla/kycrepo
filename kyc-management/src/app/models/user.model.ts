@@ -9,9 +9,14 @@ export interface User {
   roles: Role[];  // This should be an array of Role enums
 }
 
-  
+  export interface Admin{
+    username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  }
   export enum Role {
-    ADMIN = 'ROLE_ADMIN',
-    USER = 'ROLE_USER'
+    ADMIN = 'ADMIN',
+    CUSTOMER = 'CUSTOMER'
   }
   

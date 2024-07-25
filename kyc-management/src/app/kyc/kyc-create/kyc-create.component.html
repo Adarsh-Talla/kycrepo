@@ -2,7 +2,7 @@
   <h2>Create KYC</h2>
   <form (ngSubmit)="createKyc()">
     <label for="userId">User ID</label>
-    <input type="text" id="userId" [(ngModel)]="kyc.userId" name="userId" required>
+    <input type="text" id="userId" [(ngModel)]="kyc.userName" name="userId" required>
 
     <label for="kycType">KYC Type</label>
     <select id="kycType" [(ngModel)]="kyc.kycType" name="kycType" required>

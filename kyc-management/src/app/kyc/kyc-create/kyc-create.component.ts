@@ -11,7 +11,7 @@ import { Kyc, KycStatus, KycType } from '../../models/kyc.model';
 export class KycCreateComponent {
   kyc: Kyc = {
     id: 0,
-    userId: '',  // This should be set dynamically based on the logged-in user
+    userName: '',  // This should be set dynamically based on the logged-in user
     kycType: KycType.ID_PROOF,
     kycStatus: KycStatus.PENDING,
     documentDetails: ''

@@ -1,0 +1,54 @@
+.navbar {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  position: fixed; /* Fixes the navbar at the top */
+  width: 100%; /* Ensures the navbar spans the full width */
+  top: 0; /* Positions the navbar at the top */
+  left: 0; /* Aligns the navbar to the left */
+  z-index: 1000; /* Keeps the navbar on top of other elements */
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Aligns items in a row */
+}
+
+.navbar li {
+  margin-right: 15px;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar button {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.navbar button:hover {
+  background-color: #666;
+}
+
+/* Ensure the content below the navbar does not hide behind it */
+body {
+  margin: 0;
+  padding-top: 50px; /* Adjust based on the height of your navbar */
+}
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column;
+    align-items: center;
+  }
+  .navbar li {
+    margin: 10px 0;
+  }
+}

@@ -4,7 +4,7 @@
   <table>
     <thead>
       <tr>
-        <th>User ID</th>
+        <th>User Name</th>
         <th>KYC Type</th>
         <th>Status</th>
         <th>Details</th>
@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let kyc of kycs">
-        <td>{{ kyc.userId }}</td>
+        <td>{{ kyc.userName }}</td>
         <td>{{ kyc.kycType }}</td>
         <td>{{ kyc.kycStatus }}</td>
         <td>{{ kyc.documentDetails }}</td>

@@ -1,0 +1,9 @@
+<nav>
+  <ul>
+    <li *ngIf="!isLoggedIn()"><a routerLink="/admin-login">Admin Login</a></li>
+    <li *ngIf="!isLoggedIn()"><a routerLink="/customer-login">Customer Login</a></li>
+    <li *ngIf="!isLoggedIn()"><a routerLink="/admin-register">Admin Register</a></li>
+    <li *ngIf="!isLoggedIn()"><a routerLink="/customer-register">Customer Register</a></li>
+    <li *ngIf="isLoggedIn()"><button (click)="logout()">Logout</button></li>
+  </ul>
+</nav>
