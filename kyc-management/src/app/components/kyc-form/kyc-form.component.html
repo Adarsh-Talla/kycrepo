@@ -1,0 +1,17 @@
+<div class="container mt-5">
+  <h2>Submit KYC</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="kycType">KYC Type</label>
+      <select class="form-control" id="kycType" [(ngModel)]="kyc.kycType" name="kycType" required>
+        <option [ngValue]="undefined" disabled>Select a KYC Type</option>
+        <option *ngFor="let type of kycTypes" [ngValue]="type">{{type}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="documentDetails">Document Details</label>
+      <textarea class="form-control" id="documentDetails" [(ngModel)]="kyc.documentDetails" name="documentDetails" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!kyc.kycType || !kyc.documentDetails">Submit KYC</button>
+  </form>
+</div>

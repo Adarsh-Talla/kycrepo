@@ -1,0 +1,12 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" routerLink="/">KYC Management</a>
+    <div class="navbar-nav ml-auto">
+      <ng-container *ngIf="authService.currentUserValue; else loginLinks">
+        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+      </ng-container>
+      <ng-template #loginLinks>
+        <a class="nav-item nav-link" routerLink="/admin-login">Admin Login</a>
+        <a class="nav-item nav-link" routerLink="/customer-login">Customer Login</a>
+      </ng-template>
+    </div>
+  </nav>

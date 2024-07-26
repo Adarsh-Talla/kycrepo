@@ -1,0 +1,37 @@
+<!-- src/app/components/customer-register/customer-register.component.html -->
+
+<div class="container mt-5">
+    <h2>Customer Registration</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" [(ngModel)]="customer.username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" [(ngModel)]="customer.password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" class="form-control" id="firstName" [(ngModel)]="customer.firstName" name="firstName" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" class="form-control" id="lastName" [(ngModel)]="customer.lastName" name="lastName" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="customer.email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" class="form-control" id="phoneNumber" [(ngModel)]="customer.phoneNumber" name="phoneNumber" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    
+    <div *ngIf="error" class="alert alert-danger mt-3">{{error}}</div>
+  <div class="mt-3">
+    <p>Already have an account? <a routerLink="/customer-login">Login here</a></p>
+  </div>
+  </div>

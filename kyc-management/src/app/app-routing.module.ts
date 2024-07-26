@@ -1,55 +1,26 @@
+// src/app/app-routing.module.ts
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
-import { AdminLoginComponent } from './admin-login/admin-login.component';
-import { AdminRegisterComponent } from './admin-register/admin-register.component';
-import { AuthGuard } from './auth.guard';
-import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
-import { CustomerLoginComponent } from './customer-login/customer-login.component';
-import { CustomerRegisterComponent } from './customer-register/customer-register.component';
-import { KycCreateComponent } from './kyc/kyc-create/kyc-create.component';
-import { KycDetailComponent } from './kyc/kyc-detail/kyc-detail.component';
-import { KycListComponent } from './kyc/kyc-list/kyc-list.component';
-import { LogoutComponent } from './logout/logout.component';
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { AdminLoginComponent } from './components/admin-login/admin-login.component';
+import { AdminRegisterComponent } from './components/admin-register/admin-register.component';
+import { CustomerDashboardComponent } from './components/customer-dashboard/customer-dashboard.component';
+import { CustomerLoginComponent } from './components/customer-login/customer-login.component';
+import { CustomerRegisterComponent } from './components/customer-register/customer-register.component';
+import { HomeComponent } from './components/home/home.component';
+import { KycFormComponent } from './components/kyc-form/kyc-form.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/customer-login', pathMatch: 'full' },
-  { path: 'customer-login', component: CustomerLoginComponent },
+  { path: '', component: HomeComponent },
   { path: 'admin-login', component: AdminLoginComponent },
-  { path: 'customer-register', component: CustomerRegisterComponent },
+  { path: 'customer-login', component: CustomerLoginComponent },
   { path: 'admin-register', component: AdminRegisterComponent },
-  { 
-    path: 'admin-dashboard', 
-    component: AdminDashboardComponent, 
-    canActivate: [AuthGuard], 
-    data: { expectedRole: 'ROLE_ADMIN' } 
-  },
-  { 
-    path: 'customer-dashboard', 
-    component: CustomerDashboardComponent, 
-    canActivate: [AuthGuard], 
-    data: { expectedRole: 'ROLE_USER' } 
-  },
-  { 
-    path: 'kyc-create', 
-    component: KycCreateComponent, 
-    canActivate: [AuthGuard], 
-    data: { expectedRole: 'ROLE_USER' } 
-  },
-  { 
-    path: 'kyc-list', 
-    component: KycListComponent, 
-    canActivate: [AuthGuard], 
-    data: { expectedRole: 'ROLE_ADMIN' } 
-  },
-  { 
-    path: 'kyc-detail/:id', 
-    component: KycDetailComponent, 
-    canActivate: [AuthGuard], 
-    data: { expectedRole: 'ROLE_ADMIN' } 
-  },
-  { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '/customer-login' }
+  { path: 'customer-register', component: CustomerRegisterComponent },
+  { path: 'admin-dashboard', component: AdminDashboardComponent },
+  { path: 'customer-dashboard', component: CustomerDashboardComponent },
+  { path: 'kyc-form', component: KycFormComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

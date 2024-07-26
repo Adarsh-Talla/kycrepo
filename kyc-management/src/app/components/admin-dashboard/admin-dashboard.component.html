@@ -1,0 +1,27 @@
+<div class="container mt-5">
+    <h2>Admin Dashboard</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>KYC Type</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let kyc of kycList">
+          <td>{{kyc.id}}</td>
+          <td>{{kyc.userName}}</td>
+          <td>{{kyc.kycType}}</td>
+          <td>{{kyc.kycStatus}}</td>
+          <td>
+            <button class="btn btn-danger btn-sm ml-2" (click)="deleteKyc(kyc.id)">Delete</button>
+            <button class="btn btn-success btn-sm mr-2" (click)="approveKyc(kyc.id)">Approve</button>
+            <button class="btn btn-danger btn-sm" (click)="rejectKyc(kyc.id)">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
