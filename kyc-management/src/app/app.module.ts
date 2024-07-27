@@ -12,6 +12,7 @@ import { CustomerLoginComponent } from './components/customer-login/customer-log
 import { HomeComponent } from './components/home/home.component';
 import { KycFormComponent } from './components/kyc-form/kyc-form.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
