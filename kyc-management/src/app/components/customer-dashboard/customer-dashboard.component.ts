@@ -1,3 +1,5 @@
+// src/app/components/customer-dashboard/customer-dashboard.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { KycDTO } from '../../models/kyc.model';

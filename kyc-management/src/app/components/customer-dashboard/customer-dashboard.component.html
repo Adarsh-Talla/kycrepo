@@ -1,13 +1,14 @@
 <div class="container mt-5">
-    <h2>Customer Dashboard</h2>
-    <a routerLink="/kyc-form" class="btn btn-primary mb-3">Submit New KYC</a>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>KYC Type</th>
-          <th>Status</th>
-          <th>Document Details</th>
+  <h2>Customer Dashboard</h2>
+  <a routerLink="/kyc-form" class="btn btn-primary mb-3">Submit New KYC</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>KYC Type</th>
+        <th>Status</th>
+        <th>Document Details</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -16,12 +17,11 @@
         <td>{{kyc.kycType}}</td>
         <td>{{kyc.kycStatus}}</td>
         <td>{{kyc.documentDetails}}</td>
-      
-      <td>
-        <button class="btn btn-primary btn-sm mr-2" (click)="updateKyc(kyc)">Update</button>
-        <button class="btn btn-danger btn-sm" (click)="deleteKyc(kyc.id)">Delete</button>
-      </td>
-    </tr>
+        <td>
+          <button class="btn btn-primary btn-sm mr-2" (click)="updateKyc(kyc)">Update</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteKyc(kyc.id)">Delete</button>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

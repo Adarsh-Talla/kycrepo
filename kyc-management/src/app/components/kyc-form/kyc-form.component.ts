@@ -1,6 +1,8 @@
+// src/app/components/kyc-form/kyc-form.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KycDTO, KycType } from '../../models/kyc.model';
+import { KycDTO, KycStatus, KycType } from '../../models/kyc.model';
 import { AuthService } from '../../services/auth.service';
 import { KycService } from '../../services/kyc.service';
 
@@ -50,6 +52,7 @@ export class KycFormComponent implements OnInit {
 
   onSubmit() {
     if (this.kyc.kycType && this.kyc.documentDetails) {
+      this.kyc.kycStatus = KycStatus.SUBMITTED;
       const operation = this.isUpdating
         ? this.kycService.updateKyc(this.kyc as KycDTO)
         : this.kycService.saveKyc(this.kyc as KycDTO);
