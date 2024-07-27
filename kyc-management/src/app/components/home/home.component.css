@@ -1,0 +1,23 @@
+/* home.component.css */
+
+.home-container {
+    text-align: center;
+    padding: 50px 20px;
+  }
+  
+  .home-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .home-description {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+  }
+  
+  .home-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  

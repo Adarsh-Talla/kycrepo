@@ -1,0 +1,23 @@
+/* admin-dashboard.component.css, customer-dashboard.component.css */
+
+.dashboard-container {
+    padding: 20px;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    flex: 1;
+    min-width: 200px;
+  }
+  

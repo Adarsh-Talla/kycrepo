@@ -1,0 +1,19 @@
+/* navbar.component.css */
+
+.navbar {
+    background-color: #343a40;
+    padding: 10px 20px;
+  }
+  
+  .navbar-brand, .nav-link {
+    color: #fff;
+  }
+  
+  .nav-link {
+    margin-left: 10px;
+  }
+  
+  .nav-link:hover {
+    color: #ddd;
+  }
+  
