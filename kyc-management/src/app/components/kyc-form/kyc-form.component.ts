@@ -1,5 +1,3 @@
-// src/app/components/kyc-form/kyc-form.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KycDTO, KycStatus, KycType } from '../../models/kyc.model';
@@ -18,6 +16,7 @@ export class KycFormComponent implements OnInit {
     documentDetails: ''
   };
   isUpdating = false;
+  successMessage: string | null = null; // Added successMessage property
 
   constructor(
     private kycService: KycService,
@@ -59,7 +58,11 @@ export class KycFormComponent implements OnInit {
 
       operation.subscribe(
         () => {
-          this.router.navigate(['/customer-dashboard']);
+          this.successMessage = 'Your KYC has been successfully submitted!';
+          setTimeout(() => {
+            this.successMessage = null;
+            this.router.navigate(['/customer-dashboard']);
+          }, 2000); // Optionally, hide the message after 2 seconds
         },
         (error) => {
           console.error('Error submitting KYC:', error);

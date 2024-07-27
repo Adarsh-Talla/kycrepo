@@ -1,6 +1,6 @@
 <div class="container mt-5">
   <h2>Submit KYC</h2>
-  <form (ngSubmit)="onSubmit()">
+  <form (ngSubmit)="onSubmit()" #kycForm="ngForm">
     <div class="form-group">
       <label for="kycType">KYC Type</label>
       <select class="form-control" id="kycType" [(ngModel)]="kyc.kycType" name="kycType" required>
@@ -12,6 +12,10 @@
       <label for="documentDetails">Document Details</label>
       <textarea class="form-control" id="documentDetails" [(ngModel)]="kyc.documentDetails" name="documentDetails" required></textarea>
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!kyc.kycType || !kyc.documentDetails">Submit KYC</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!kycForm.valid">Submit KYC</button>
   </form>
+  
+  <div *ngIf="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }}
+  </div>
 </div>

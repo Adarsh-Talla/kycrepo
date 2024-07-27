@@ -45,6 +45,15 @@ h2 {
   background-color: #0056b3;
   border-color: #0056b3;
 }
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
 
 .mt-5 {
   margin-top: 3rem !important;
