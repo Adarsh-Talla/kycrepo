@@ -1,5 +1,4 @@
 /* navbar.component.css */
-
 .navbar {
   background-color: #ffffff;
   border-bottom: 1px solid #dee2e6;
@@ -9,6 +8,13 @@
 .navbar-brand {
   font-size: 1.5rem;
   color: #007bff;
+}
+.navbar-brand {
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-nav .nav-item .nav-link {
+  transition: color 0.2s ease-in-out;
 }
 
 .navbar-brand:hover {
