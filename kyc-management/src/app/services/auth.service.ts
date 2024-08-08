@@ -1,23 +1,27 @@
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Admin } from '../models/admin.model';
-import { Customer } from '../models/customer.model';
+import { Admin } from './admin.model';
 import { AdminService } from './admin.service';
+import { Customer } from './customer.model';
 import { CustomerService } from './customer.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
   private currentUserSubject: BehaviorSubject<Admin | Customer | null>;
   public currentUser: Observable<Admin | Customer | null>;
 
   constructor(
     private adminService: AdminService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private cookieService: CookieService
   ) {
-    this.currentUserSubject = new BehaviorSubject<Admin | Customer | null>(JSON.parse(localStorage.getItem('currentUser') || 'null'));
+    const storedUser = this.cookieService.get('currentUser');
+    this.currentUserSubject = new BehaviorSubject<Admin | Customer | null>(storedUser ? JSON.parse(storedUser) : null);
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -28,13 +32,16 @@ export class AuthService {
   loginAdmin(username: string, password: string): Observable<Admin> {
     return this.adminService.authenticate(username, password).pipe(
       map((admin: Admin) => {
-        localStorage.setItem('currentUser', JSON.stringify(admin));
+        this.cookieService.set('currentUser', JSON.stringify(admin), 1, '/');
         this.currentUserSubject.next(admin);
         return admin;
       }),
       catchError(error => {
-        // Handle error here
-        return throwError(() => new Error('Login failed.'));
+        if (error.status === 401) {
+          return throwError(() => new Error('Invalid username or password'));
+        } else {
+          return throwError(() => new Error('An unexpected error occurred'));
+        }
       })
     );
   }
@@ -42,25 +49,28 @@ export class AuthService {
   loginCustomer(username: string, password: string): Observable<Customer> {
     return this.customerService.authenticate(username, password).pipe(
       map((customer: Customer) => {
-        localStorage.setItem('currentUser', JSON.stringify(customer));
+        this.cookieService.set('currentUser', JSON.stringify(customer), 1, '/');
         this.currentUserSubject.next(customer);
         return customer;
       }),
       catchError(error => {
-        // Handle error here
-        return throwError(() => new Error('Login failed.'));
+        if (error.status === 401) {
+          return throwError(() => new Error('Invalid username or password'));
+        } else {
+          return throwError(() => new Error('An unexpected error occurred'));
+        }
       })
     );
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    this.cookieService.delete('currentUser', '/');
     this.currentUserSubject.next(null);
   }
 
   isAdmin(): boolean {
     const user = this.currentUserValue;
-    return user ? !('email' in user) : false;
+    return !!user && !('phoneNumber' in user);
   }
 
   registerAdmin(admin: Admin): Observable<Admin> {
