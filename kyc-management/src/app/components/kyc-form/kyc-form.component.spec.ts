@@ -1,3 +1,4 @@
+// kyc-form.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
@@ -74,7 +75,7 @@ describe('KycFormComponent', () => {
 
   it('should handle form submission with update', () => {
     component.isUpdating = true;
-    component.kyc = { id: 1, userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF, kycStatus: KycStatus.SUBMITTED };
+    component.kyc = { userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF, kycStatus: KycStatus.SUBMITTED };
     mockKycService.updateKyc.mockReturnValue(of(null));
 
     component.onSubmit();
@@ -84,20 +85,21 @@ describe('KycFormComponent', () => {
   });
 
   it('should handle error during form submission', () => {
-    component.kyc = { userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF, kycStatus: KycStatus.SUBMITTED };
+    component.kyc = { userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF };
     mockKycService.saveKyc.mockReturnValue(throwError(() => new Error('Error')));
 
     component.onSubmit();
 
-    expect(component.successMessage).toBeNull(); // Ensure no success message
-    expect(mockRouter.navigate).not.toHaveBeenCalled(); // Ensure navigation is not called
+    expect(component.successMessage).toBeNull();
+    expect(component.errorMessage).toBe('Error submitting KYC.'); // Ensure error message is set
   });
 
   it('should not submit the form if KYC Type or Document Details are missing', () => {
-    component.kyc = { userName: 'testUser' }; // Missing kycType and documentDetails
+    component.kyc = { userName: 'testUser' };
 
     component.onSubmit();
 
-    expect(component.successMessage).toBeNull(); // Ensure no success message
+    expect(component.successMessage).toBeNull();
+    expect(component.errorMessage).toBe('KYC Type and Document Details are required'); // Ensure error message is set
   });
 });

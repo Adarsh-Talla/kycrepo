@@ -1,3 +1,4 @@
+// kyc-form.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KycDTO, KycStatus, KycType } from '../../models/kyc.model';
@@ -11,12 +12,10 @@ import { KycService } from '../../services/kyc.service';
 })
 export class KycFormComponent implements OnInit {
   kycTypes = Object.values(KycType);
-  kyc: Partial<KycDTO> = {
-    userName: '',
-    documentDetails: ''
-  };
+  kyc: Partial<KycDTO> = {};
   isUpdating = false;
-  successMessage: string | null = null; // Added successMessage property
+  successMessage: string | null = null;
+  errorMessage: string | null = null; // Added errorMessage property
 
   constructor(
     private kycService: KycService,
@@ -45,6 +44,7 @@ export class KycFormComponent implements OnInit {
       },
       (error) => {
         console.error('Error loading KYC:', error);
+        this.errorMessage = 'Error loading KYC data.';
       }
     );
   }
@@ -62,16 +62,17 @@ export class KycFormComponent implements OnInit {
           setTimeout(() => {
             this.successMessage = null;
             this.router.navigate(['/customer-dashboard']);
-          }, 2000); // Optionally, hide the message after 2 seconds
+          }, 2000);
         },
         (error) => {
           console.error('Error submitting KYC:', error);
-          this.successMessage = null; // Clear successMessage on error
+          this.errorMessage = 'Error submitting KYC.';
+          this.successMessage = null; // Ensure successMessage is set to null on error
         }
       );
     } else {
-      console.error('KYC Type and Document Details are required');
-      this.successMessage = null; // Clear successMessage on missing fields
+      this.errorMessage = 'KYC Type and Document Details are required';
+      this.successMessage = null; // Ensure successMessage is set to null if validation fails
     }
   }
 }
