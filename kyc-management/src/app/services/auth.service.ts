@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Admin } from './admin.model';
+import { Admin } from '../models/admin.model';
+import { Customer } from '../models/customer.model';
 import { AdminService } from './admin.service';
-import { Customer } from './customer.model';
 import { CustomerService } from './customer.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   private currentUserSubject: BehaviorSubject<Admin | Customer | null>;
   public currentUser: Observable<Admin | Customer | null>;
 
@@ -70,7 +69,7 @@ export class AuthService {
 
   isAdmin(): boolean {
     const user = this.currentUserValue;
-    return !!user && !('phoneNumber' in user);
+    return user && 'username' in user && !(user as Customer).email;
   }
 
   registerAdmin(admin: Admin): Observable<Admin> {
