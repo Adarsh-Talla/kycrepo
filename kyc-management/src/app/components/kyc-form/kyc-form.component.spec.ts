@@ -74,7 +74,7 @@ describe('KycFormComponent', () => {
 
   it('should handle form submission with update', () => {
     component.isUpdating = true;
-    component.kyc = { userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF, kycStatus: KycStatus.SUBMITTED };
+    component.kyc = { id: 1, userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF, kycStatus: KycStatus.SUBMITTED };
     mockKycService.updateKyc.mockReturnValue(of(null));
 
     component.onSubmit();
@@ -84,19 +84,20 @@ describe('KycFormComponent', () => {
   });
 
   it('should handle error during form submission', () => {
-    component.kyc = { userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF };
+    component.kyc = { userName: 'testUser', documentDetails: 'details', kycType: KycType.ID_PROOF, kycStatus: KycStatus.SUBMITTED };
     mockKycService.saveKyc.mockReturnValue(throwError(() => new Error('Error')));
 
     component.onSubmit();
 
-    expect(component.successMessage).toBeNull();
+    expect(component.successMessage).toBeNull(); // Ensure no success message
+    expect(mockRouter.navigate).not.toHaveBeenCalled(); // Ensure navigation is not called
   });
 
   it('should not submit the form if KYC Type or Document Details are missing', () => {
-    component.kyc = { userName: 'testUser' };
+    component.kyc = { userName: 'testUser' }; // Missing kycType and documentDetails
 
     component.onSubmit();
 
-    expect(component.successMessage).toBeNull();
+    expect(component.successMessage).toBeNull(); // Ensure no success message
   });
 });

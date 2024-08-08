@@ -66,10 +66,12 @@ export class KycFormComponent implements OnInit {
         },
         (error) => {
           console.error('Error submitting KYC:', error);
+          this.successMessage = null; // Clear successMessage on error
         }
       );
     } else {
       console.error('KYC Type and Document Details are required');
+      this.successMessage = null; // Clear successMessage on missing fields
     }
   }
 }
