@@ -31,8 +31,7 @@ describe('CustomerDashboardComponent', () => {
         { provide: AuthService, useValue: mockAuthService },
         { provide: Router, useValue: mockRouter }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -54,7 +53,7 @@ describe('CustomerDashboardComponent', () => {
     component.ngOnInit();
 
     expect(mockKycService.getAllKycs).toHaveBeenCalled();
-    expect(component.kycList).toEqual(mockKycList);
+    expect(component.kycList).toEqual(mockKycList.filter(kyc => kyc.userName === 'testUser'));
   });
 
   it('should update KYC by navigating to KYC form', () => {
@@ -76,7 +75,7 @@ describe('CustomerDashboardComponent', () => {
 
     expect(mockKycService.deleteKyc).toHaveBeenCalledWith(1);
     expect(mockKycService.getAllKycs).toHaveBeenCalled();
-    expect(component.kycList).toEqual(mockKycList);
+    expect(component.kycList).toEqual(mockKycList.filter(kyc => kyc.userName === 'testUser'));
   });
 
   it('should handle error while deleting KYC', () => {
@@ -85,5 +84,6 @@ describe('CustomerDashboardComponent', () => {
     component.deleteKyc(1);
 
     expect(mockKycService.deleteKyc).toHaveBeenCalledWith(1);
+    // Optionally verify error handling behavior
   });
 });

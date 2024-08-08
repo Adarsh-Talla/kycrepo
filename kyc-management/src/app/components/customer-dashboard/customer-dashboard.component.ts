@@ -1,5 +1,3 @@
-// src/app/components/customer-dashboard/customer-dashboard.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { KycDTO } from '../../models/kyc.model';
@@ -20,18 +18,19 @@ export class CustomerDashboardComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadKycList();
   }
 
-  updateKyc(kyc: KycDTO) {
+  updateKyc(kyc: KycDTO): void {
     // Navigate to KYC form with the KYC data for updating
     this.router.navigate(['/kyc-form', { id: kyc.id }]);
   }
-  
-  deleteKyc(id: number) {
+
+  deleteKyc(id: number): void {
     this.kycService.deleteKyc(id).subscribe(
       () => {
+        // Reload the KYC list after deletion
         this.loadKycList();
       },
       (error: any) => {
@@ -40,7 +39,7 @@ export class CustomerDashboardComponent implements OnInit {
     );
   }
 
-  loadKycList() {
+  loadKycList(): void {
     const currentUser = this.authService.currentUserValue;
     if (currentUser) {
       this.kycService.getAllKycs().subscribe(
